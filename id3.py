@@ -41,7 +41,7 @@ class DecisionTree:
             # For categorical attribute, create sub-tree for each attribute value
             attribute_values = dataset[best_attribute].unique()
             for value in attribute_values:
-                filtered_subset = dataset[dataset[best_attribute] == value].copy()
+                filtered_subset = self.split_dataset(dataset, best_attribute, value)[0]
                 # Recursively build the subtree for the current attribute value
                 subtree = self.build_decision_tree(filtered_subset, remaining_attributes, class_name)
                 # Add the subtree to the current tree for the specific attribute value
@@ -50,17 +50,14 @@ class DecisionTree:
         elif attr_type == 'numerical':
             # For numerical attribute, find the best threshold and split the dataset
             threshold = self.threshold_of_numerical_attribute(dataset, best_attribute, class_name)
-            left_subset = dataset[dataset[best_attribute] <= threshold].copy()
-            right_subset = dataset[dataset[best_attribute] > threshold].copy()
-
+            left_subset = self.split_dataset(dataset, best_attribute, threshold)[0]
+            right_subset = self.split_dataset(dataset, best_attribute, threshold)[1]
             # Recursively build subtrees for the splits
             subtree_left = self.build_decision_tree(left_subset, remaining_attributes, class_name)
             subtree_right = self.build_decision_tree(right_subset, remaining_attributes, class_name)
-
             # Construct the numerical attribute sub-tree with threshold conditions
             tree[best_attribute]["<=" + str(threshold)] = subtree_left
             tree[best_attribute][">" + str(threshold)] = subtree_right
-
         return tree
 
 
@@ -246,5 +243,6 @@ class DecisionTree:
             filtered_dataset = filtered_dataset[filtered_dataset[attribute] <= attribute_value]
             filtered_dataset = filtered_dataset.drop(columns=[attribute])
             remaining_dataset = remaining_dataset[remaining_dataset[attribute] > attribute_value]
+            remaining_dataset = remaining_dataset.drop(columns=[attribute])
         return filtered_dataset, remaining_dataset
 
