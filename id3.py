@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import math
 
 class DecisionTree:
@@ -60,7 +61,6 @@ class DecisionTree:
             tree[best_attribute][">" + str(threshold)] = subtree_right
         return tree
 
-
     def fit(self, dataset, class_name):
         """
         Fit the decision tree model to the training data.
@@ -71,6 +71,39 @@ class DecisionTree:
         """
         attributes = self.get_attributes(dataset)
         self.tree = self.build_decision_tree(dataset, attributes, class_name)
+
+    #######################################################################################
+    # HANDLING PREDICTIONS FOR TEST DATA
+    #######################################################################################
+    def predict_instance(self, instance, tree):
+        """Predict the class for a single instance using the decision tree."""
+        # Traverse the tree until reaching a leaf node (class label)
+        while isinstance(tree, dict):
+            attribute, subtree_dict = next(iter(tree.items()))
+            attribute_value = instance[attribute]
+            
+            if self.attribute_type(pd.DataFrame([instance]), attribute) == 'numerical':
+                threshold = float(list(subtree_dict.keys())[0].replace("<=", ""))
+                if attribute_value <= threshold:
+                    tree = subtree_dict["<=" + str(threshold)]
+                else:
+                    tree = subtree_dict[">" + str(threshold)]
+            else:
+                if attribute_value in subtree_dict:
+                    tree = subtree_dict[attribute_value]
+                else:
+                    return None
+        return tree 
+
+    def predict(self, test_data):
+        """Predict the classes for multiple instances using the decision tree."""
+        predictions = []
+        for _, instance in test_data.iterrows():
+            prediction = self.predict_instance(instance, self.tree)
+            predictions.append(prediction)
+        return predictions
+
+    #######################################################################################
 
     def entropy(self, dataset, class_name):
         """
