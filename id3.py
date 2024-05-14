@@ -19,6 +19,9 @@ class DecisionTree:
         Returns:
         - dict: Decision tree represented as a nested dictionary.
         """
+        # Replace None values with "None" string in categorical attributes
+        dataset = dataset.fillna("None")
+
         # Base case: if all instances belong to the same class
         class_counts = self.attribute_value_counts_simple(dataset, class_name)[0]
         if len(class_counts) == 1:
@@ -41,6 +44,7 @@ class DecisionTree:
         if attr_type == 'categorical':
             # For categorical attribute, create sub-tree for each attribute value
             attribute_values = dataset[best_attribute].unique()
+            print(attribute_values)
             for value in attribute_values:
                 filtered_subset = self.split_dataset(dataset, best_attribute, value)[0]
                 # Recursively build the subtree for the current attribute value
@@ -248,18 +252,18 @@ class DecisionTree:
     #     split_point = self.threshold_of_numerical_attribute(dataset, attribute, class_name)
 
 
-    def get_class(self, dict):
-        """
-        Parameter: a dict like this {'no': 0, 'yes': 4} or this {"a": 5, "b" : 0, "c":6}
-        Returns: A class if it is the only one with key greater than 0 in the dictionary
-        """
-        filtered_items = {key: value for key, value in dict.items() if value > 0}
-        count_positive_values = len(filtered_items)
-        if count_positive_values == 1:
-            # Return the only positive value
-            return next(iter(filtered_items))  
-        else:
-            return None
+    # def get_class(self, dict):
+    #     """
+    #     Parameter: a dict like this {'no': 0, 'yes': 4} or this {"a": 5, "b" : 0, "c":6}
+    #     Returns: A class if it is the only one with key greater than 0 in the dictionary
+    #     """
+    #     filtered_items = {key: value for key, value in dict.items() if value > 0}
+    #     count_positive_values = len(filtered_items)
+    #     if count_positive_values == 1:
+    #         # Return the only positive value
+    #         return next(iter(filtered_items))  
+    #     else:
+    #         return None
  
     def split_dataset(self, dataset, attribute, attribute_value):
         """

@@ -17,6 +17,7 @@ tree_model = DecisionTree()
 tree_model.fit(data, class_name='Class')
 
 print(tree_model.tree)
+print(tree_model.attribute_value_counts(data, "Pat", "Class"))
 
 # test_data = pd.DataFrame({
 #     'Weather': ['sunny', 'overcast', 'rainy', 'sunny'],
@@ -25,19 +26,26 @@ print(tree_model.tree)
 #     'Windy': [False, True, True, False]
 # })
 
-test_data_restaurant = pd.DataFrame({
-    'Alt': ['Yes','No','Yes'],
-    'Bar':['Yes','No','Yes'],
-    'Fri':['Yes','No','Yes'],
-    'Hun':['Yes','No','Yes'],
-    'Pat':['Full', 'None', 'Full'],
-    'Price':['$$$', '$', '$'],
-    'Rain':['No', 'No','No'],
-    'Res':['Yes', 'No', 'No'],
-    'Type':['Italian', 'Thai', 'Burger'],
-    'Est':['10-30','0-10', '30-60']
+# test_data_restaurant = pd.DataFrame({
+#     'Alt': ['Yes','No','Yes'],
+#     'Bar':['Yes','No','Yes'],
+#     'Fri':['Yes','No','Yes'],
+#     'Hun':['Yes','No','Yes'],
+#     'Pat':['Full', 'None', 'Full'],
+#     'Price':['$$$', '$', '$'],
+#     'Rain':['No', 'No','No'],
+#     'Res':['Yes', 'No', 'No'],
+#     'Type':['Italian', 'Thai', 'Burger'],
+#     'Est':['10-30','0-10', '30-60']
+# })
+
+test_data_iris = pd.DataFrame({
+    'sepallength': [5.1, 4.9, 4.7, 4.6],
+    'sepalwidth': [3.5, 3.0, 3.2, 3.1],
+    'petallength': [1.4, 2, 1.3, 1.5],
+    'petalwidth': [0.2, 0.2, 0.2, 0.2],
 })
 
-print(tree_model.predict(test_data_restaurant))
+# print(tree_model.predict(test_data_iris))
 
-#To Do:- Need to handle None from restaurant Pat because it is not treating it as String but as None
+#To Do:- Need to add depth to the tree
