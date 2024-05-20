@@ -1,23 +1,24 @@
 import pandas as pd
-from id3 import DecisionTree;
+from id3 import DecisionTree
+#import pre_process
 
 # Load the dataset
 # file_path = 'weather.csv'
-# file_path = 'iris.csv'
-file_path = 'restaurant.csv'
-# file_path = 'connect4.csv'
+#file_path = 'iris.csv'
+#file_path = 'restaurant.csv'
+file_path = 'connect4.csv'
 data = pd.read_csv(file_path)
 
 # Remove 'ID' column from the dataset
 #For connect4 dont remove anything
-data = data.drop('ID', axis=1)
+#data = data.drop('ID', axis=1)
 
 # Instantiate and fit the DecisionTree model
-tree_model = DecisionTree()
+tree_model = DecisionTree(max_depth = 3)
 tree_model.fit(data, class_name='Class')
 
 print(tree_model.tree)
-print(tree_model.attribute_value_counts(data, "Pat", "Class"))
+#print(tree_model.attribute_value_counts_simple(data, "Pat"))
 
 # test_data = pd.DataFrame({
 #     'Weather': ['sunny', 'overcast', 'rainy', 'sunny'],
@@ -39,13 +40,13 @@ print(tree_model.attribute_value_counts(data, "Pat", "Class"))
 #     'Est':['10-30','0-10', '30-60']
 # })
 
-test_data_iris = pd.DataFrame({
-    'sepallength': [5.1, 4.9, 4.7, 4.6],
-    'sepalwidth': [3.5, 3.0, 3.2, 3.1],
-    'petallength': [1.4, 2, 1.3, 1.5],
-    'petalwidth': [0.2, 0.2, 0.2, 0.2],
-})
+# test_data_iris = pd.DataFrame({
+#     'sepallength': [5.1, 4.9, 4.7, 4.6],
+#     'sepalwidth': [3.5, 3.0, 3.2, 3.1],
+#     'petallength': [1.4, 2, 1.3, 1.5],
+#     'petalwidth': [0.2, 0.2, 0.2, 0.2],
+# })
 
 # print(tree_model.predict(test_data_iris))
-
+#print(tree_model.predict(test_data_iris))
 #To Do:- Need to add depth to the tree

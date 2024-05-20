@@ -3,11 +3,12 @@ import pandas as pd
 import math
 
 class DecisionTree:
-    def __init__(self):
-        """Initialize the decision tree"""
+    def __init__(self, max_depth=None):
+        """Initialize the decision tree with an optional max depth"""
         self.tree = None
+        self.max_depth = max_depth
 
-    def build_decision_tree(self, dataset, attributes, class_name):
+    def build_decision_tree(self, dataset, attributes, class_name, current_depth=0):
         """
         Recursively build the decision tree.
 
@@ -15,6 +16,7 @@ class DecisionTree:
         - dataset (pandas.DataFrame): DataFrame containing the dataset.
         - attributes (list): List of attribute names.
         - class_name (str): Name of the class variable.
+        - current_depth (int): Current depth of the tree.
 
         Returns:
         - dict: Decision tree represented as a nested dictionary.
@@ -27,8 +29,8 @@ class DecisionTree:
         if len(class_counts) == 1:
             return next(iter(class_counts))  # Return the class label
 
-        # Base case: if no attributes left to split on
-        if len(attributes) == 0:
+        # Base case: if no attributes left to split on or max depth reached
+        if len(attributes) == 0 or (self.max_depth is not None and current_depth >= self.max_depth):
             return dataset[class_name].mode()[0]  # Return the most frequent class
 
         # Select the best attribute to split on
@@ -44,11 +46,10 @@ class DecisionTree:
         if attr_type == 'categorical':
             # For categorical attribute, create sub-tree for each attribute value
             attribute_values = dataset[best_attribute].unique()
-            print(attribute_values)
             for value in attribute_values:
                 filtered_subset = self.split_dataset(dataset, best_attribute, value)[0]
                 # Recursively build the subtree for the current attribute value
-                subtree = self.build_decision_tree(filtered_subset, remaining_attributes, class_name)
+                subtree = self.build_decision_tree(filtered_subset, remaining_attributes, class_name, current_depth + 1)
                 # Add the subtree to the current tree for the specific attribute value
                 tree[best_attribute][value] = subtree
 
@@ -58,13 +59,14 @@ class DecisionTree:
             left_subset = self.split_dataset(dataset, best_attribute, threshold)[0]
             right_subset = self.split_dataset(dataset, best_attribute, threshold)[1]
             # Recursively build subtrees for the splits
-            subtree_left = self.build_decision_tree(left_subset, remaining_attributes, class_name)
-            subtree_right = self.build_decision_tree(right_subset, remaining_attributes, class_name)
+            subtree_left = self.build_decision_tree(left_subset, remaining_attributes, class_name, current_depth + 1)
+            subtree_right = self.build_decision_tree(right_subset, remaining_attributes, class_name, current_depth + 1)
             # Construct the numerical attribute sub-tree with threshold conditions
             tree[best_attribute]["<=" + str(threshold)] = subtree_left
             tree[best_attribute][">" + str(threshold)] = subtree_right
-        return tree
 
+        return tree
+    
     def fit(self, dataset, class_name):
         """
         Fit the decision tree model to the training data.
@@ -224,6 +226,7 @@ class DecisionTree:
         Parameters: dataset and attribute whose values are to be checked
         Returns: a tuple like this for example:- ({'yes': 9, 'no': 5}, 14)
         """
+        dataset = dataset.fillna("None")
         attribute_series = dataset[attribute]
         value_counts = attribute_series.value_counts().to_dict()
         total_values = len(attribute_series)
@@ -235,6 +238,7 @@ class DecisionTree:
         Returns: a tuple like this for example:- ({'overcast': 
         ({'no': 0, 'yes': 4}, 4), 'rainy': ({'no': 2, 'yes': 3}, 5), 'sunny': ({'no': 3, 'yes': 2}, 5)}, 14)
         """
+        dataset = dataset.fillna("None")
         grouped = dataset.groupby(attribute)[class_name].value_counts().unstack(fill_value=0)
         attribute_value_counts = {}
         total_attribute_values = len(dataset[attribute])
