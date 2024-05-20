@@ -36,13 +36,14 @@ def create_train_test(dataset, counts_class_train, counts_class_test):
     return train,test
 
  
+def get_target_name(dataset):
+    return dataset.columns[-1]
 
 
 
-def train_test_split(dataset_name,train_size):
-    dataset=pd.read_csv(dataset_name)
+def train_test_split(dataset,train_size):
     percentages_class,counts_class=get_class_imbalance(dataset)
-    print(f"Class imbanlance do dataset original: {percentages_class, counts_class}")
+    #print(f"Class imbanlance do dataset original: {percentages_class, counts_class}")
     train_size=round(train_size*dataset.shape[0])
     test_size=dataset.shape[0]-train_size
 
@@ -57,8 +58,4 @@ def train_test_split(dataset_name,train_size):
     train,test= create_train_test(dataset=dataset, counts_class_train=counts_class_train, counts_class_test=counts_class_test)
     
     return train, test
-    
 
-train,test = train_test_split(dataset_name="iris.csv", train_size=0.7)
-print(f"Class imbalance do treino: {get_class_imbalance(train)}")
-print(f"Class imbalance do treino: {get_class_imbalance(test)}")
