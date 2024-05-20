@@ -6,8 +6,8 @@ from metrics import confusion_matrix, evaluate_metrics
 # Load the dataset
 #file_path = 'weather.csv'
 #file_path = 'iris.csv'
-#file_path = 'restaurant.csv'
-file_path = 'connect4.csv'
+file_path = 'restaurant.csv'
+# file_path = 'connect4.csv'
 data = pd.read_csv(file_path)
 
 #Remove 'ID' column from the dataset
@@ -17,7 +17,10 @@ data = pd.read_csv(file_path)
 # Instantiate and fit the DecisionTree model
 train, test = train_test_split(data, 0.8)
 tree_model = DecisionTree()
-tree_model.fit(train, get_target_name(data))
+# tree_model = DecisionTree(max_depth = 3)
+tree_model.fit(data, get_target_name(data))
+# tree_model.fit(data, get_target_name(data))
 print(tree_model.tree)
 
+print(tree_model.predict(test))
 #To Do:- Format the tree as in the assignment

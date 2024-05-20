@@ -27,11 +27,15 @@ class DecisionTree:
         # Base case: if all instances belong to the same class
         class_counts = self.attribute_value_counts_simple(dataset, class_name)[0]
         if len(class_counts) == 1:
-            return next(iter(class_counts))  # Return the class label
+            class_label = next(iter(class_counts))
+            count = class_counts[class_label]
+            return (class_label, count)  # Return the class label with count
 
         # Base case: if no attributes left to split on or max depth reached
         if len(attributes) == 0 or (self.max_depth is not None and current_depth >= self.max_depth):
-            return dataset[class_name].mode()[0]  # Return the most frequent class
+            most_frequent_class = dataset[class_name].mode()[0]
+            count = class_counts[most_frequent_class]
+            return (most_frequent_class, count)  # Return the most frequent class with count
 
         # Select the best attribute to split on
         best_attribute = self.get_best_attribute(dataset, attributes, class_name)
@@ -106,7 +110,10 @@ class DecisionTree:
         predictions = []
         for _, instance in test_data.iterrows():
             prediction = self.predict_instance(instance, self.tree)
-            predictions.append(prediction)
+            if prediction:
+                predictions.append(prediction[0])
+            else:
+                predictions.append(None)
         return predictions
 
     #######################################################################################
