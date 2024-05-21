@@ -11,13 +11,11 @@ class DecisionTree:
     def build_decision_tree(self, dataset, attributes, class_name, current_depth=0):
         """
         Recursively build the decision tree.
-
         Parameters:
-        - dataset (pandas.DataFrame): DataFrame containing the dataset.
-        - attributes (list): List of attribute names.
-        - class_name (str): Name of the class variable.
-        - current_depth (int): Current depth of the tree.
-
+        - dataset: DataFrame containing the dataset.
+        - attributes: List of attribute names.
+        - class_name: Name of the class variable.
+        - current_depth: Current depth of the tree.
         Returns:
         - dict: Decision tree represented as a nested dictionary.
         """
@@ -73,11 +71,7 @@ class DecisionTree:
     
     def fit(self, dataset, class_name):
         """
-        Fit the decision tree model to the training data.
-
-        Parameters:
-        - dataset:the training dataset.
-        - class_name (str): Name of the class variable.
+        Parameters: dataset, class_name
         """
         attributes = self.get_attributes(dataset)
         self.tree = self.build_decision_tree(dataset, attributes, class_name)
@@ -236,10 +230,8 @@ class DecisionTree:
     #######################################################################################   
     def get_attributes(self, dataset):
         """
-        Parameters:
-        - dataset: Dataset containing attributes.
-        Returns:
-        - list: List of all attributes.
+        Parameters: dataset
+        Returns: list: List of all attributes.
         """
         return list(dataset.columns[:-1])
     
@@ -298,4 +290,3 @@ class DecisionTree:
             remaining_dataset = remaining_dataset[remaining_dataset[attribute] > attribute_value]
             remaining_dataset = remaining_dataset.drop(columns=[attribute])
         return filtered_dataset, remaining_dataset
-

@@ -39,7 +39,8 @@ def create_train_test(dataset, counts_class_train, counts_class_test):
 def get_target_name(dataset):
     return dataset.columns[-1]
 
-
+def get_classes(dataset):
+    return dataset[get_target_name(dataset)].unique().tolist()
 
 def train_test_split(dataset,train_size):
     percentages_class,counts_class=get_class_imbalance(dataset)

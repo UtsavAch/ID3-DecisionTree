@@ -63,7 +63,7 @@ ID,Weather,Temp,Humidity,Windy,Play
 
             True:
             ID,Temp,Humidity,Play
-            6,65,70,TRUE,no
-            14,71,91,TRUE,no
+            6,65,70,no
+            14,71,91,no
             (All classes are no when True)
 
