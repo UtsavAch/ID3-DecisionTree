@@ -83,6 +83,32 @@ class DecisionTree:
         self.tree = self.build_decision_tree(dataset, attributes, class_name)
 
     #######################################################################################
+    # TO PRINT THE TREE IN THE DESIRED FORMAT
+    #######################################################################################
+
+    def print_tree(self, tree, indent=""):
+        """
+        Prints the decision tree in a structured format with attributes wrapped in <>.
+        Parameters:
+        - tree (dict): The decision tree to be printed.
+        """
+        if not isinstance(tree, dict):
+            # If the tree is not a dictionary, it's a leaf node (class, count)
+            print(f"{tree[0]} ({tree[1]})")
+            return
+
+        for attribute, subtree in tree.items():
+            print(f"{indent}<{attribute}>")
+            for value, subsubtree in subtree.items():
+                if isinstance(subsubtree, tuple):
+                    # If it's a leaf node
+                    print(f"{indent}    {value}: {subsubtree[0]} ({subsubtree[1]})")
+                else:
+                    # If it's an internal node, print the value and recursively call print_tree
+                    print(f"{indent}    {value}:")
+                    self.print_tree(subsubtree, indent + "        ")
+
+    #######################################################################################
     # HANDLING PREDICTIONS FOR TEST DATA
     #######################################################################################
     def predict_instance(self, instance, tree):
@@ -144,8 +170,6 @@ class DecisionTree:
                 curr_information_gain = self.information_gain_of_attribute(dataset, attributes[i],class_name)
         return best_attribute
     
-    #######################################################################
-    
     def information_gain_of_attribute(self, dataset, attribute, class_name):
         """
         Parameter: dataset and attribute
@@ -157,7 +181,7 @@ class DecisionTree:
             return self.information_gain_of_numerical_attribute(dataset, attribute, class_name)
         
     #######################################################################################
-    # HANDLING INFORMATION GAIN FOR NUMERICAL ATTRIBUTE
+    # HANDLING INFORMATION GAIN FOR NUMERICAL ATTRIBUTE AND GETTING THRESHOLD
     #######################################################################################
     def numerical_information_gain_and_threshold(self, dataset, numerical_attribute, class_name):
         parent_entropy = self.entropy(dataset, class_name)
@@ -206,8 +230,10 @@ class DecisionTree:
                     attribute_val_entropy -= probability * math.log2(probability)
             information_gain -= (attribute_value[1] / attribute_info_count) * attribute_val_entropy
         return information_gain
-    #######################################################################################
     
+    #######################################################################################
+    # HELPER METHODS
+    #######################################################################################   
     def get_attributes(self, dataset):
         """
         Parameters:
@@ -215,7 +241,7 @@ class DecisionTree:
         Returns:
         - list: List of all attributes.
         """
-        return list(dataset.columns[:-1]) #Exclude last column
+        return list(dataset.columns[:-1])
     
     def attribute_type(self, dataset, attribute):
         """
@@ -254,27 +280,6 @@ class DecisionTree:
             total_count = sum(class_counts_dict.values())
             attribute_value_counts[attr_value] = (class_counts_dict, total_count)
         return attribute_value_counts, total_attribute_values
-    
-    # def threshold_value_count(self, dataset, attribute, class_name):
-    #     """
-    #     ({'overcast': 
-    #     ({'no': 0, 'yes': 4}, 4), 'rainy': ({'no': 2, 'yes': 3}, 5), 'sunny': ({'no': 3, 'yes': 2}, 5)}, 14)
-    #     """
-    #     split_point = self.threshold_of_numerical_attribute(dataset, attribute, class_name)
-
-
-    # def get_class(self, dict):
-    #     """
-    #     Parameter: a dict like this {'no': 0, 'yes': 4} or this {"a": 5, "b" : 0, "c":6}
-    #     Returns: A class if it is the only one with key greater than 0 in the dictionary
-    #     """
-    #     filtered_items = {key: value for key, value in dict.items() if value > 0}
-    #     count_positive_values = len(filtered_items)
-    #     if count_positive_values == 1:
-    #         # Return the only positive value
-    #         return next(iter(filtered_items))  
-    #     else:
-    #         return None
  
     def split_dataset(self, dataset, attribute, attribute_value):
         """
