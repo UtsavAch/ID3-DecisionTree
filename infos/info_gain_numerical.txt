@@ -1,0 +1,23 @@
+(This is how to calculate the information gain of numerical attribute for a given threshold)
+
+Step1:- Calculate the parent entropy
+
+Step2:- Split the dataset into two by the given threshold (<= threshold and > threshold)
+
+Step3:- calculate the entropy of the two subsets
+
+Step4:- Calculate the information gain of the attribute for the given threshold
+
+        Info Gain = ParentEntropy - (sizeOfLeftSubset/TotalSize)*LeftEntropy - (sizeOfRightSubset/TotalSize)*RightEntropy
+
+
+
+(Find the information gain for different thresholds, the threshold with highest info gain will be the info gain of the attribute)
+
+
+####
+How to find the thresholds?
+
+Step1:- Sort the dataset based on the values of the numerical attribute
+
+Step2:-For each pair of consecutive values, the potential threshold is computed as the average of these two values.
