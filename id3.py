@@ -27,13 +27,13 @@ class DecisionTree:
         if len(class_counts) == 1:
             class_label = next(iter(class_counts))
             count = class_counts[class_label]
-            return (class_label, count)  # Return the class label with count
+            return (class_label, count)
 
         # Base case: if no attributes left to split on or max depth reached
         if len(attributes) == 0 or (self.max_depth is not None and current_depth >= self.max_depth):
-            most_frequent_class = dataset[class_name].mode()[0]
-            count = class_counts[most_frequent_class]
-            return (most_frequent_class, count)  # Return the most frequent class with count
+            count = len(dataset[class_name])
+            class_label = dataset[class_name].mode()[0]
+            return (class_label, count)
 
         # Select the best attribute to split on
         best_attribute = self.get_best_attribute(dataset, attributes, class_name)
